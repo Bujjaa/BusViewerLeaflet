@@ -26,6 +26,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Double value;
     private Double lat = 50.8864933;
     private Double lng = 8.0243671;
+    private long backPressedTime= 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,5 +93,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
 
 
+    }
+    @Override
+    public void onBackPressed() {        // to prevent irritating accidental logouts
+        long t = System.currentTimeMillis();
+        if (t - backPressedTime > 2000) {    // 2 secs
+            backPressedTime = t;
+            Toast.makeText(this, "Press back again to move to Homescreen",
+                    Toast.LENGTH_SHORT).show();
+        } else {    // this guy is serious
+            // clean up#
+            finish();
+            super.onBackPressed();       // bye
+        }
     }
 }

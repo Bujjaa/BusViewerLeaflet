@@ -9,33 +9,35 @@
     tools:layout_editor_absoluteX="0dp">
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/btn_gmaps"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="54dp"
-        android:layout_marginTop="145dp"
         android:onClick="gotoMaps"
-        android:text="Maps" />
+        android:text="Maps"
+        android:layout_marginStart="91dp"
+        android:layout_alignBaseline="@+id/btn_leaflet"
+        android:layout_alignBottom="@+id/btn_leaflet"
+        android:layout_alignParentStart="true" />
 
     <Button
-        android:id="@+id/button5"
+        android:id="@+id/btn_logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/button4"
-        android:layout_marginEnd="72dp"
         android:onClick="logout"
-        android:text="Logout" />
+        android:text="Logout"
+        android:layout_marginStart="62dp"
+        android:layout_centerVertical="true"
+        android:layout_alignStart="@+id/btn_gmaps" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/btn_leaflet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/button5"
-        android:layout_marginTop="24dp"
-        android:layout_toEndOf="@+id/button4"
-        android:onClick="test"
-        android:text="Test" />
+        android:onClick="leaflet"
+        android:text="Leaflet"
+        android:layout_marginStart="38dp"
+        android:layout_marginBottom="77dp"
+        android:layout_alignBottom="@+id/btn_logout"
+        android:layout_toEndOf="@+id/btn_gmaps" />
+
 </RelativeLayout>
