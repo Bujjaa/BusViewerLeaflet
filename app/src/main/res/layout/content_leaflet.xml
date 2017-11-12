@@ -8,4 +8,11 @@
     tools:context="com.example.android.busviewerleaflet.LeafletActivity"
     tools:showIn="@layout/activity_leaflet">
 
+    <WebView
+        android:id="@+id/webviewLeaflet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
 </android.support.constraint.ConstraintLayout>
