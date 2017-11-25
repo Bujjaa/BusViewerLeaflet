@@ -7,12 +7,15 @@ import android.os.Build;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,25 +25,35 @@ import android.widget.ListView;
 import android.widget.Toast;
 import android.support.v4.widget.DrawerLayout;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.example.android.busviewerleaflet.Fragments.AboutFragment;
+import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private long backPressedTime = 0;
-
+    ListView list;
+    CustomAdapter adapter;
+    public  MainActivity CustomListView = null;
+    public ArrayList<ListModel> customListViewValuesArr = new ArrayList<ListModel>();
+    String[] a = new String[50];
+    ArrayList<String> blist = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         this.checkPermissions();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -51,6 +64,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Buslinien");
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> results, ParseException e) {
+                if (e == null) {
+                    for (int i = 0; i < results.size(); i++) {
+                        String [] a = new String[results.size()];
+                        String [] b = new String[results.size()];
+                        String [] c = new String[results.size()];
+
+                        a[i] = (results.get(i).getString("Buslinie"));
+                        b[i] = (results.get(i).getString("Start"));
+                        c[i] = (results.get(i).getString("Ende"));
+                        Log.d("Main","Arraylist b"+blist.get(i));
+
+                    }
+                } else {
+                    Log.d("score", "Error: " + e.getMessage());
+                }
+            }
+        });
+
+
+        
+
+        /*
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.fragment_container, new AboutFragment());
+        fragmentTransaction.commit();
+        */
 
     }
 
@@ -117,19 +161,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
-    public void logout(View view){
-        if(FirebaseAuth.getInstance().getCurrentUser() != null) {
-            //mLoginActivity.signOut();
-            FirebaseAuth.getInstance().signOut();
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-        }
-    }
 
     public void leaflet(View view){
         String[] permissions = new String[] {Manifest.permission.INTERNET};
         checkPermission(permissions);
-
+/*
         int id = view.getId();
         if (id == R.id.imageUX1) {
             String message = "ux1";
@@ -143,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
         }
 
-
+*/
 
     }
     public void checkPermissions(){
@@ -184,4 +220,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
+    //used by adapter
+    public void onItemClick(int mPosition) {
+
+    }
 }
