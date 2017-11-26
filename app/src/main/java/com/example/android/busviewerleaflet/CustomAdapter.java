@@ -23,32 +23,38 @@ public class CustomAdapter extends BaseAdapter   implements View.OnClickListener
 
     /*********** Declare Used Variables *********/
     private Activity activity;
-    private ArrayList data;
+    private Context mContext;
+    private ArrayList<String> mName = new ArrayList<>();
+    private ArrayList<String> mStart = new ArrayList<>();
+    private ArrayList<String> mEnd = new ArrayList<>();
     private static LayoutInflater inflater=null;
     public Resources res;
     ListModel tempValues=null;
     int i=0;
 
     /*************  CustomAdapter Constructor *****************/
-    public CustomAdapter(Activity a, ArrayList d,Resources resLocal) {
+    public CustomAdapter(Context context, ArrayList name, ArrayList start, ArrayList end) {
 
         /********** Take passed values **********/
-        activity = a;
-        data=d;
-        res = resLocal;
+        mContext = context;
+        mName= name;
+        mStart = start;
+        mEnd = end;
+
+        //res = resLocal;
 
         /***********  Layout inflator to call external xml layout () ***********/
-        inflater = ( LayoutInflater )activity.
-                getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+       // inflater = ( LayoutInflater )activity.
+         //       getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
     }
 
     /******** What is the size of Passed Arraylist Size ************/
     public int getCount() {
 
-        if(data.size()<=0)
+        if(mName.size()<=0)
             return 1;
-        return data.size();
+        return mName.size();
     }
 
     public Object getItem(int position) {
@@ -72,27 +78,31 @@ public class CustomAdapter extends BaseAdapter   implements View.OnClickListener
     /****** Depends upon data size called for each row , Create each ListView row *****/
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        View vi = convertView;
+        View view = null;
         ViewHolder holder;
 
         if(convertView==null){
 
             /****** Inflate tabitem.xml file for each row ( Defined below ) *******/
-            vi = inflater.inflate(R.layout.fragment_item, null);
+            //view = inflater.inflate(R.layout.fragment_item, null);
+            view = LayoutInflater.from(mContext).inflate(R.layout.fragment_item,parent,false);
 
-            /****** View Holder Object to contain tabitem.xml file elements ******/
-
+            /****** View Holder Object to contain tabitem.xml file elements *****
             holder = new ViewHolder();
-            holder.busName = (TextView) vi.findViewById(R.id.busName);
-            holder.busStart=(TextView)vi.findViewById(R.id.busStart);
-            holder.busEnd= (TextView)vi.findViewById(R.id.busEnd);
+            holder.busName = (TextView) view.findViewById(R.id.busName);
+            holder.busStart=(TextView)view.findViewById(R.id.busStart);
+            holder.busEnd= (TextView)view.findViewById(R.id.busEnd);
 
-            /************  Set holder with LayoutInflater ************/
-            vi.setTag( holder );
+            /************  Set holder with LayoutInflater ***********
+            view.setTag( holder );
+            */
+
         }
-        else
-            holder=(ViewHolder)vi.getTag();
-
+        else {
+            //holder = (ViewHolder) view.getTag();
+            view = convertView;
+        }
+/*
         if(data.size()<=0)
         {
             holder.busName.setText("No Data");
@@ -100,11 +110,11 @@ public class CustomAdapter extends BaseAdapter   implements View.OnClickListener
         }
         else
         {
-            /***** Get each Model object from Arraylist ********/
+            /***** Get each Model object from Arraylist *******
             tempValues=null;
             tempValues = ( ListModel ) data.get( position );
 
-            /************  Set Model values in Holder elements ***********/
+            /************  Set Model values in Holder elements **********
 
             holder.busName.setText( tempValues.getBuslinie() );
             holder.busStart.setText( tempValues.getStart() );
@@ -112,9 +122,19 @@ public class CustomAdapter extends BaseAdapter   implements View.OnClickListener
 
             /******** Set Item Click Listner for LayoutInflater for each row *******/
 
-            vi.setOnClickListener(new OnItemClickListener( position ));
+            view.setOnClickListener(new OnItemClickListener( position ));
+        //}
+        TextView nameTextview = (TextView) view.findViewById(R.id.busName);
+        TextView startTextview = (TextView) view.findViewById(R.id.busStart);
+        TextView endeTextview = (TextView) view.findViewById(R.id.busEnd);
+        if(mName.size()!= 0) {
+            String name = mName.get(position);
+            nameTextview.setText(mName.get(position));
+            startTextview.setText(mStart.get(position));
+            endeTextview.setText(mEnd.get(position));
         }
-        return vi;
+
+        return view;
     }
 
     @Override

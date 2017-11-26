@@ -44,7 +44,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public  MainActivity CustomListView = null;
     public ArrayList<ListModel> customListViewValuesArr = new ArrayList<ListModel>();
     String[] a = new String[50];
-    ArrayList<String> blist = new ArrayList<String>();
+    ArrayList<String> alist = new ArrayList<>();
+    ArrayList<String> blist = new ArrayList<>();
+    ArrayList<String> clist = new ArrayList<>();
+
+    private ArrayAdapter<String> mAdapter;
+    private CustomAdapter mCustomAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,14 +82,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         a[i] = (results.get(i).getString("Buslinie"));
                         b[i] = (results.get(i).getString("Start"));
                         c[i] = (results.get(i).getString("Ende"));
+                        alist.add(a[i]);
+                        blist.add(b[i]);
+                        clist.add(c[i]);
                         Log.d("Main","Arraylist b"+blist.get(i));
+
 
                     }
                 } else {
                     Log.d("score", "Error: " + e.getMessage());
                 }
+                mCustomAdapter.notifyDataSetChanged();
+
             }
         });
+
+
 
 
         
@@ -95,6 +108,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fragmentTransaction.add(R.id.fragment_container, new AboutFragment());
         fragmentTransaction.commit();
         */
+
+        ListView listView = (ListView) findViewById(R.id.list);
+        //mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,blist);
+        mCustomAdapter = new CustomAdapter(this,alist,blist,clist);
+        listView.setAdapter(mCustomAdapter);
 
     }
 

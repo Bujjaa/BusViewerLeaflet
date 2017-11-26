@@ -5,6 +5,7 @@
     android:layout_marginBottom="10dp">
 
     <ImageView
+        android:layout_margin="16dp"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:id="@+id/image1"
@@ -12,23 +13,30 @@
 
     <TextView
         android:id="@+id/busName"
+        android:textSize="25dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:textAppearance="@layout/fragment_item_list" />
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="25dp"
+        android:textAppearance="@layout/fragment_item_list"
+    />
 
     <TextView
         android:id="@+id/busStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:textAppearance="@layout/fragment_item_list" />
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="25dp"
+        android:textAppearance="@layout/fragment_item_list"
+        android:textSize="25dp" />
 
     <TextView
         android:id="@+id/busEnd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:textAppearance="@layout/fragment_item_list" />
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="25dp"
+        android:textAppearance="@layout/fragment_item_list"
+        android:textSize="25dp" />
 
 </LinearLayout>
