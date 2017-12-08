@@ -5,10 +5,12 @@ import android.app.Fragment;
 import android.app.ListFragment;
 import android.content.Context;
 import android.content.res.Resources;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,7 +21,7 @@ import java.util.ArrayList;
  * Created by Anton on 21.11.2017.
  */
 
-public class CustomAdapter extends BaseAdapter   implements View.OnClickListener {
+public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder>   {
 
     /*********** Declare Used Variables *********/
     private Activity activity;
@@ -29,14 +31,16 @@ public class CustomAdapter extends BaseAdapter   implements View.OnClickListener
     private ArrayList<String> mEnd = new ArrayList<>();
     private static LayoutInflater inflater=null;
     public Resources res;
+    private com.example.android.busviewerleaflet.Fragments.ListFragment.Callback mCallback;
     ListModel tempValues=null;
     int i=0;
 
     /*************  CustomAdapter Constructor *****************/
-    public CustomAdapter(Context context, ArrayList name, ArrayList start, ArrayList end) {
+    public CustomAdapter(Context context, com.example.android.busviewerleaflet.Fragments.ListFragment.Callback callback, ArrayList name, ArrayList start, ArrayList end) {
 
         /********** Take passed values **********/
         mContext = context;
+        mCallback = callback;
         mName= name;
         mStart = start;
         mEnd = end;
@@ -50,22 +54,43 @@ public class CustomAdapter extends BaseAdapter   implements View.OnClickListener
     }
 
     /******** What is the size of Passed Arraylist Size ************/
-    public int getCount() {
+    public int getItemCount() {
 
         if(mName.size()<=0)
             return 1;
         return mName.size();
     }
-
+/*
     public Object getItem(int position) {
         return position;
     }
+    */
 
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_item,parent,false);
+        return new ViewHolder(itemView);
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        if(mName.size()!= 0) {
+            String name = mName.get(position);
+            holder.nameTextview.setText(mName.get(position));
+            holder.startTextview.setText(mStart.get(position));
+            holder.endeTextview.setText(mEnd.get(position));
+        }
+
+    }
+/*
     public long getItemId(int position) {
         return position;
     }
+*/
 
-    /********* Create a holder Class to contain inflated xml file elements *********/
+
+
+    /********* Create a holder Class to contain inflated xml file elements ********
     public static class ViewHolder{
 
         public TextView busName;
@@ -74,6 +99,7 @@ public class CustomAdapter extends BaseAdapter   implements View.OnClickListener
         public ImageView image;
 
     }
+     */
 
     /****** Depends upon data size called for each row , Create each ListView row *****/
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -122,7 +148,7 @@ public class CustomAdapter extends BaseAdapter   implements View.OnClickListener
 
             /******** Set Item Click Listner for LayoutInflater for each row *******/
 
-            view.setOnClickListener(new OnItemClickListener( position ));
+            //view.setOnClickListener(new OnItemClickListener( position ));
         //}
         TextView nameTextview = (TextView) view.findViewById(R.id.busName);
         TextView startTextview = (TextView) view.findViewById(R.id.busStart);
@@ -137,12 +163,17 @@ public class CustomAdapter extends BaseAdapter   implements View.OnClickListener
         return view;
     }
 
+
+
+
+    /*
+
     @Override
     public void onClick(View v) {
         Log.v("CustomAdapter", "=====Row button clicked=====");
     }
 
-    /********* Called when Item click in ListView ************/
+    /********* Called when Item click in ListView ***********
     private class OnItemClickListener  implements View.OnClickListener {
         private int mPosition;
 
@@ -156,9 +187,36 @@ public class CustomAdapter extends BaseAdapter   implements View.OnClickListener
 
             MainActivity act =(MainActivity) activity;
 
-            /****  Call  onItemClick Method inside CustomListViewAndroidExample Class ( See Below )****/
+            /****  Call  onItemClick Method inside CustomListViewAndroidExample Class ( See Below )***
 
             act.onItemClick(mPosition);
         }
+
+        }
+        */
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        public TextView nameTextview ;
+        public TextView startTextview ;
+        public TextView endeTextview;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    String s1 = nameTextview.getText().toString();
+                    mCallback.onListItemSelected(s1);
+                    Log.d("CustomAdapter","clicktest"+nameTextview.getText());
+
+                }
+            });
+            nameTextview = (TextView) itemView.findViewById(R.id.busName);
+            startTextview = (TextView) itemView.findViewById(R.id.busStart);
+            endeTextview = (TextView) itemView.findViewById(R.id.busEnd);
+        }
     }
+
 }

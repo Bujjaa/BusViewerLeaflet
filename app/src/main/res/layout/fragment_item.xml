@@ -13,30 +13,32 @@
 
     <TextView
         android:id="@+id/busName"
-        android:textSize="25dp"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="25dp"
-        android:textAppearance="@layout/fragment_item_list"
+        android:layout_weight="0.4"
+        android:textSize="20dp"
     />
 
     <TextView
         android:id="@+id/busStart"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="25dp"
-        android:textAppearance="@layout/fragment_item_list"
-        android:textSize="25dp" />
+        android:textAlignment="center"
+        android:textSize="20dp" />
 
     <TextView
         android:id="@+id/busEnd"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
+        android:layout_weight="1"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="25dp"
-        android:textAppearance="@layout/fragment_item_list"
-        android:textSize="25dp" />
+        android:textAlignment="center"
+        android:textSize="20dp" />
 
 </LinearLayout>

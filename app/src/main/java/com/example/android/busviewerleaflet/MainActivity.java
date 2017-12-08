@@ -2,11 +2,10 @@ package com.example.android.busviewerleaflet;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
+import android.location.Location;
 import android.os.Build;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -15,33 +14,27 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.Manifest;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
-import android.support.v4.widget.DrawerLayout;
 
-import com.example.android.busviewerleaflet.Fragments.AboutFragment;
-import com.parse.FindCallback;
-import com.parse.GetCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
+import com.example.android.busviewerleaflet.Fragments.ListFragment;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements ListFragment.Callback, NavigationView.OnNavigationItemSelectedListener {
 
     private long backPressedTime = 0;
     ListView list;
     CustomAdapter adapter;
-    public  MainActivity CustomListView = null;
+    public MainActivity CustomListView = null;
     public ArrayList<ListModel> customListViewValuesArr = new ArrayList<ListModel>();
     String[] a = new String[50];
     ArrayList<String> alist = new ArrayList<>();
@@ -50,6 +43,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private ArrayAdapter<String> mAdapter;
     private CustomAdapter mCustomAdapter;
+    private FragmentTransaction fragmentTransaction;
+    private FusedLocationProviderClient mFusedLocationClient;
+    String locationGPS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +65,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.fragment_container, new ListFragment());
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
+/*
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Buslinien");
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
@@ -92,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 } else {
                     Log.d("score", "Error: " + e.getMessage());
                 }
-                mCustomAdapter.notifyDataSetChanged();
+              //  mCustomAdapter.notifyDataSetChanged();
 
             }
         });
@@ -102,17 +105,46 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         
 
-        /*
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.fragment_container, new AboutFragment());
-        fragmentTransaction.commit();
-        */
 
-        ListView listView = (ListView) findViewById(R.id.list);
+
+/*
+
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setHasFixedSize(true);
         //mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,blist);
         mCustomAdapter = new CustomAdapter(this,alist,blist,clist);
-        listView.setAdapter(mCustomAdapter);
+        recyclerView.setAdapter(mCustomAdapter);
+        */
+/*
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("Main position test", ""+alist.get(position));
+            }
+        });
+*/
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        mFusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if (location != null) {
+                    locationGPS = ""+location.getLatitude()+location.getLongitude();
+                }
+
+            }
+        });
 
     }
 
@@ -218,28 +250,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         }
     }
-    @Override
-    public void onBackPressed() {        // to prevent irritating accidental logouts
-        long t = System.currentTimeMillis();
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            if (t - backPressedTime > 2000) {    // 2 secs
-                backPressedTime = t;
-                Toast.makeText(this, "Press back again to close the app",
-                        Toast.LENGTH_SHORT).show();
-            } else {    // this guy is serious
-                // clean up#
-                finish();
-                System.exit(0);
-            }
-        }
-    }
+
 
 
     //used by adapter
     public void onItemClick(int mPosition) {
+
+    }
+
+    @Override
+    public void onListItemSelected(String string) {
+        Bundle bundle = new Bundle();
+        bundle.putString("Buslinie",string);
+        bundle.putString("GPS",locationGPS);
+        Leafletfragment lf = new Leafletfragment();
+        lf.setArguments(bundle);
+
+        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, lf);
+        fragmentTransaction.addToBackStack("webview");
+        fragmentTransaction.commit();
 
     }
 }
