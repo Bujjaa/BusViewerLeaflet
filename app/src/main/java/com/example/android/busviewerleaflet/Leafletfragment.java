@@ -33,11 +33,13 @@ public class Leafletfragment extends Fragment {
 
         Bundle bundle = this.getArguments();
         String buslinie = "";
-        String gps = "";
+        String gpsLat = "";
+        String gpsLong = "";
 
         if(bundle != null) {
             buslinie = bundle.getString("Buslinie");
-            gps = bundle.getString("GPS");
+            gpsLat = bundle.getString("GPSLat");
+            gpsLong = bundle.getString("GPSLong");
         }
 
         buslinie = buslinie.toLowerCase();
@@ -49,8 +51,9 @@ public class Leafletfragment extends Fragment {
 
         myWebView.setWebViewClient(new WebViewClient());
         Log.d("Leafletfragment", ""+buslinie);
-        Log.d("Leafletfragment", ""+gps);
-        myWebView.loadUrl("http://www.bujjaa.bplaced.net/"+buslinie);
+        Log.d("Leafletfragment LAT", ""+gpsLat);
+        Log.d("Leafletfragment LONG", ""+gpsLong);
+        myWebView.loadUrl("http://www.bujjaa.bplaced.net/"+buslinie+"/?lat="+gpsLat+"&long="+gpsLong);
 
         return view;
 

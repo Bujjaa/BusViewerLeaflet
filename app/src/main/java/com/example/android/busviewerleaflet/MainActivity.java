@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements ListFragment.Call
     private CustomAdapter mCustomAdapter;
     private FragmentTransaction fragmentTransaction;
     private FusedLocationProviderClient mFusedLocationClient;
-    String locationGPS;
+    String locationLat, locationLong;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,59 +71,7 @@ public class MainActivity extends AppCompatActivity implements ListFragment.Call
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
-/*
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Buslinien");
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> results, ParseException e) {
-                if (e == null) {
-                    for (int i = 0; i < results.size(); i++) {
-                        String [] a = new String[results.size()];
-                        String [] b = new String[results.size()];
-                        String [] c = new String[results.size()];
 
-                        a[i] = (results.get(i).getString("Buslinie"));
-                        b[i] = (results.get(i).getString("Start"));
-                        c[i] = (results.get(i).getString("Ende"));
-                        alist.add(a[i]);
-                        blist.add(b[i]);
-                        clist.add(c[i]);
-                        Log.d("Main","Arraylist b"+blist.get(i));
-
-
-                    }
-                } else {
-                    Log.d("score", "Error: " + e.getMessage());
-                }
-              //  mCustomAdapter.notifyDataSetChanged();
-
-            }
-        });
-
-
-
-
-        
-
-
-
-/*
-
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setHasFixedSize(true);
-        //mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,blist);
-        mCustomAdapter = new CustomAdapter(this,alist,blist,clist);
-        recyclerView.setAdapter(mCustomAdapter);
-        */
-/*
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("Main position test", ""+alist.get(position));
-            }
-        });
-*/
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -140,7 +88,8 @@ public class MainActivity extends AppCompatActivity implements ListFragment.Call
             @Override
             public void onSuccess(Location location) {
                 if (location != null) {
-                    locationGPS = ""+location.getLatitude()+location.getLongitude();
+                    locationLat = ""+location.getLatitude();
+                    locationLong = ""+ location.getLongitude();
                 }
 
             }
@@ -209,6 +158,14 @@ public class MainActivity extends AppCompatActivity implements ListFragment.Call
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 1)
+            getSupportFragmentManager().popBackStack();
+        else
+            finish();    // Finish the activity
+    }
+
 
 
 
@@ -262,7 +219,8 @@ public class MainActivity extends AppCompatActivity implements ListFragment.Call
     public void onListItemSelected(String string) {
         Bundle bundle = new Bundle();
         bundle.putString("Buslinie",string);
-        bundle.putString("GPS",locationGPS);
+        bundle.putString("GPSLat",locationLat);
+        bundle.putString("GPSLong",locationLong);
         Leafletfragment lf = new Leafletfragment();
         lf.setArguments(bundle);
 
