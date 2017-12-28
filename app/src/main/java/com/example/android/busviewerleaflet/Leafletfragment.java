@@ -48,6 +48,7 @@ public class Leafletfragment extends Fragment {
         WebSettings webSettings = myWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setGeolocationEnabled(true);
+        webSettings.setDomStorageEnabled(true);
 
         myWebView.setWebViewClient(new WebViewClient());
         Log.d("Leafletfragment", ""+buslinie);
