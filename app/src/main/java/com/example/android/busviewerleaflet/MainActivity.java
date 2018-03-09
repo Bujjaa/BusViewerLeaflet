@@ -14,6 +14,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -216,9 +217,13 @@ public class MainActivity extends AppCompatActivity implements ListFragment.Call
     }
 
     @Override
-    public void onListItemSelected(String string) {
+    public void onListItemSelected(String s1) {
+        String[] split = s1.split(",");
+        String buslinie = split[0];
+        String start = split[1];
         Bundle bundle = new Bundle();
-        bundle.putString("Buslinie",string);
+        bundle.putString("Buslinie",buslinie);
+        bundle.putString("Start",start);
         bundle.putString("GPSLat",locationLat);
         bundle.putString("GPSLong",locationLong);
         Leafletfragment lf = new Leafletfragment();

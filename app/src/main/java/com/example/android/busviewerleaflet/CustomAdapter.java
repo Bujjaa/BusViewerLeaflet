@@ -207,7 +207,9 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
                 @Override
                 public void onClick(View v) {
 
-                    String s1 = nameTextview.getText().toString();
+                    String sName = nameTextview.getText().toString();
+                    String sStart = startTextview.getText().toString();
+                    String s1 = sName +","+ sStart;
                     mCallback.onListItemSelected(s1);
                     Log.d("CustomAdapter","clicktest"+nameTextview.getText());
 
