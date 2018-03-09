@@ -68,7 +68,8 @@ public class leafletfragment extends Fragment {
             webSettings.setJavaScriptEnabled(true);
 
                 myWebView.setWebViewClient(new WebViewClient());
-                myWebView.loadUrl("http://www.bujjaa.bplaced.net/ux1");
+                //myWebView.loadUrl("http://www.bujjaa.bplaced.net/ux1");
+            myWebView.loadUrl("https://www.computerbase.de/");
 
         }
     }
